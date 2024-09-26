@@ -714,6 +714,57 @@
     }
     fileList.selectedIndex = 0;
 
+    /** @type {HTMLInputElement} */
+    const gotoLine = document.getElementById("gotoLine");
+
+    gotoLine.addEventListener("paste", (e) => e.stopPropagation());
+
+    gotoLine.addEventListener("change", () => {
+      const RE_POSITION = /(\d+):?(\d+)?/;
+      const matched = RE_POSITION.exec(gotoLine.value);
+
+      if (!matched) {
+        return;
+      }
+
+      let [, generatedLine, generatedColumn] = matched;
+
+      generatedLine = parseInt(generatedLine, 10);
+      generatedColumn = parseInt(generatedColumn, 10);
+
+      if (Number.isNaN(generatedLine) || generatedLine < 1) {
+        return;
+      }
+      if (Number.isNaN(generatedColumn) || generatedColumn < 1) {
+        generatedColumn = 1;
+      }
+
+      generatedLine -= 1;
+
+      hover = generatedTextArea.positionToHover(generatedColumn, generatedLine);
+
+      if (!hover) {
+        return
+      }
+
+      generatedTextArea.scrollTo(generatedColumn, generatedLine);
+      
+      if (originalTextArea.sourceIndex !== hover.mapping.originalSource) {
+        fileList.selectedIndex = hover.mapping.originalSource;
+        fileList.onchange().then(() => {
+          originalTextArea.scrollTo(
+            hover.mapping.originalColumn,
+            hover.mapping.originalLine
+          );
+        });
+      } else {
+        originalTextArea.scrollTo(
+          hover.mapping.originalColumn,
+          hover.mapping.originalLine
+        );
+      }
+    });
+    
     if (isProgressVisible) progressBarOverlay.style.display = 'none';
     const endTime = Date.now();
     console.log(`Finished loading in ${endTime - startTime}ms`);
@@ -1836,6 +1887,31 @@
         c.globalAlpha = 1;
 
         c.restore();
+      },
+
+      positionToHover(index, line) {
+        const { indexToColumn } = analyzeLine(line, index, index, "floor");
+        const column = indexToColumn(index);
+        const { firstMapping } = analyzeLine(line, column, column, "floor");
+        const generatedLine = mappings[firstMapping];
+        if (generatedLine === undefined) {
+          return null;
+        }
+        return {
+          sourceIndex,
+          lineIndex: line,
+          row: line,
+          column: column,
+          index: index,
+          mapping: {
+            generatedLine: mappings[firstMapping],
+            generatedColumn: mappings[firstMapping + 1],
+            originalSource: mappings[firstMapping + 2],
+            originalLine: mappings[firstMapping + 3],
+            originalColumn: mappings[firstMapping + 4],
+            originalName: mappings[firstMapping + 5],
+          },
+        };
       },
     };
   }

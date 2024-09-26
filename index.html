@@ -25,6 +25,7 @@
         drop a single JavaScript/<wbr>CSS file with an inline source map comment, or a JavaScript/<wbr>CSS file and a separate
         source map file together.</p>
       <p>Or you can <button id="loadExample">Load an example</button> to play around with the visualization.</p>
+      <p><em>This is a fork of <a href="https://evanw.github.io/source-map-visualization/">https://evanw.github.io/source-map-visualization/</a></em></p>
       <div id="errorText"></div>
       <noscript>This app requires JavaScript to work. Please enable JavaScript and reload the page.</noscript>
     </section>
@@ -36,6 +37,9 @@
     </section>
     <section>
       <h2>Generated&nbsp;code</h2>
+      <div id="gotoLineParent">
+        <input id="gotoLine" placeholder="1:1" />
+      </div>
     </section>
   </div>
   <div id="statusBar">

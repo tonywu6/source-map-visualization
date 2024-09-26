@@ -1,5 +1,5 @@
 body {
-  font: 14px/150% sans-serif;
+  font: 14px/150% Helvetica Neue, sans-serif;
   overflow: hidden;
 }
 
@@ -191,6 +191,19 @@ noscript:before {
   height: 100%;
   transform-origin: left;
   will-change: transform;
+}
+
+#gotoLineParent {
+  vertical-align: middle;
+}
+
+#gotoLine {
+  height: 19.5px;
+  box-sizing: border-box;
+}
+
+a {
+  color: rgba(25, 133, 255);
 }
 
 /* ---------- Light colors ---------- */
