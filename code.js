@@ -650,6 +650,7 @@
     if (sm.sources.length > 0) {
       const updateOriginalSource = (sourceIndex, progress) => {
         const source = sm.sources[sourceIndex];
+        document.title = `${sm.sources[sourceIndex].name} | Source Map Visualization`;
         return createTextArea({
           sourceIndex,
           text: source.content,
